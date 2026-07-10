@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FantaMondiale 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080f09;--panel:#0f1a10;--panel2:#162118;--border:#1e3321;--green:#16a34a;--green2:#34d399;--gold:#fbbf24;--gold2:#f59e0b;--text:#e5e7eb;--muted:#6b7280;--red:#ef4444;--amber:#d97706;--purple:#9b59b6;}
+body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+header{text-align:center;padding:28px 20px 20px;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+header::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:500px;height:250px;background:radial-gradient(ellipse,rgba(22,163,74,.13) 0%,transparent 70%);pointer-events:none}
+h1{font-family:'Oswald',sans-serif;font-size:clamp(22px,5vw,44px);font-weight:700;letter-spacing:2px;color:var(--text)}
+h1 span{color:var(--gold)}
+.h-sub{font-size:11px;letter-spacing:5px;color:var(--muted);margin-top:5px;text-transform:uppercase}
+.wrap{max-width:1280px;margin:0 auto;padding:18px 14px 80px;display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.main{flex:1 1 580px;min-width:0;display:flex;flex-direction:column;gap:14px}
+.side{display:none}
+@media(max-width:700px){
+  .side{position:static!important;width:100%}
+  .wrap{flex-direction:column}
+}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.card-head{background:var(--panel2);padding:11px 16px;font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--green2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.card-head.purple{color:#c89bf0}
+.card-body{padding:14px 16px}
+select,input{background:#1a2a1c;border:1px solid var(--border);color:var(--text);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;outline:none}
+.btn{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.8px;text-transform:uppercase;padding:8px 14px;border:none;border-radius:6px;cursor:pointer;font-weight:600;transition:filter .15s,transform .1s}
+.btn:active{transform:scale(.97)}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{filter:brightness(1.15)}
+.btn-amber{background:var(--amber);color:#fff}
+.viewer-bar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:10px 14px;background:rgba(29,78,216,.08);border-bottom:1px solid rgba(29,78,216,.2)}
+.viewer-bar label{font-size:12px;color:#93c5fd;font-weight:600}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tab{flex:1;min-width:70px;padding:9px 4px;background:var(--panel);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-size:12px;font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:.5px;text-transform:uppercase;transition:all .15s}
+.tab.active{background:var(--panel2);border-color:var(--green);color:var(--green2)}
+.tab.r16-tab.active{border-color:var(--purple);color:#c89bf0}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--panel2);padding:8px 10px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:7px 9px;border-bottom:1px solid #151f16;text-align:center;vertical-align:middle}
+tr:hover td{background:rgba(22,163,74,.04)}
+.grp-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;font-family:'Oswald',sans-serif;border:1px solid}
+.match-name{font-weight:600;white-space:nowrap;text-align:left}
+.match-date{font-size:11px;color:var(--muted);white-space:nowrap}
+.divider-row td{background:var(--panel2);color:var(--muted);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:5px 10px;border-bottom:1px solid var(--border)}
+.pred-val{font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--muted)}
+.pred-val.filled{color:var(--gold)}
+.real-val{font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--muted)}
+.real-val.filled{color:var(--gold2)}
+select.real{width:60px;padding:4px 2px;text-align:center;background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.25);color:var(--muted);border-radius:5px;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700}
+select.real.filled{color:var(--gold);border-color:var(--gold2);background:rgba(245,158,11,.1)}
+td.ok{background:rgba(22,163,74,.1)}
+td.ko{background:rgba(239,68,68,.07)}
+.lb-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:7px;margin-bottom:5px;background:var(--panel2);border:1px solid var(--border);cursor:pointer;transition:filter .15s}
+.lb-row:hover{filter:brightness(1.1)}
+.lb-row.gold{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.22)}
+.lb-row.silver{background:rgba(200,200,200,.05);border-color:rgba(200,200,200,.15)}
+.lb-row.bronze{background:rgba(180,100,30,.06);border-color:rgba(180,100,30,.18)}
+.lb-row.viewing{border-color:rgba(29,78,216,.5);background:rgba(29,78,216,.08)}
+.lb-pos{font-family:'Oswald',sans-serif;font-size:17px;min-width:26px;text-align:center}
+.lb-name{flex:1;font-weight:600;font-size:13px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.view-tag{font-size:10px;background:#1d4ed8;color:#bfdbfe;padding:1px 5px;border-radius:4px}
+.lb-bar{width:50px;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.lb-bar-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--green2));border-radius:2px}
+.lb-bar-fill.purple{background:linear-gradient(90deg,#7c3aed,#c89bf0)}
+.lb-score{font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;color:var(--green2);min-width:32px;text-align:right}
+.lb-score.purple{color:#c89bf0}
+.lb-pts{font-size:10px;color:var(--muted)}
+#toast{position:fixed;top:14px;right:14px;z-index:999;padding:10px 18px;border-radius:8px;color:#fff;font-weight:600;font-size:14px;box-shadow:0 4px 20px rgba(0,0,0,.4);display:none;max-width:320px}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:100;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:28px 30px;min-width:270px;text-align:center}
+.modal h3{font-family:'Oswald',sans-serif;font-size:18px;color:var(--gold);margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.modal-note{font-size:12px;color:var(--muted);margin-bottom:14px}
+.modal-btns{display:flex;gap:8px;justify-content:center}
+.err-msg{color:var(--red);font-size:12px;margin-bottom:8px}
+.note-box{font-size:11px;color:var(--muted);background:rgba(217,119,6,.06);border:1px solid rgba(217,119,6,.2);border-radius:6px;padding:8px 12px;margin:10px 0}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:8px;margin:18px 0 10px;padding:0 6px}
+.podium-col{display:flex;flex-direction:column;align-items:center;flex:1}
+.podium-block{width:100%;border-radius:8px 8px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:8px 4px;color:#fff}
+.podium-block.p1{background:linear-gradient(180deg,#fbbf24,#b8860b);height:110px}
+.podium-block.p2{background:linear-gradient(180deg,#d1d5db,#8b95a3);height:85px}
+.podium-block.p3{background:linear-gradient(180deg,#cd7f32,#8b4f1e);height:65px}
+.podium-medal{font-size:22px}
+.podium-name{font-family:'Oswald',sans-serif;font-weight:700;font-size:12px;margin-top:2px;text-align:center;line-height:1.3}
+.podium-pts{font-size:11px;opacity:.9}
+.section-title{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin:18px 0 8px;text-align:center}
+.tbd{color:#7c5fa8;font-style:italic}
+
+
+.side{display:none!important}
+.main{flex:1 1 100%;max-width:100%}
+.tab{flex:1;min-width:80px;font-size:11px;padding:8px 4px}
+.podium-wrap{display:flex;align-items:flex-end;justify-content:center;gap:10px;margin:20px 0 10px;padding:0 10px}
+.podium-col{display:flex;flex-direction:column;align-items:center;flex:1;max-width:160px}
+.podium-block{width:100%;border-radius:8px 8px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:10px 6px}
+.podium-block.p1{background:linear-gradient(180deg,#fbbf24,#b8860b);min-height:120px}
+.podium-block.p2{background:linear-gradient(180deg,#d1d5db,#8b95a3);min-height:90px}
+.podium-block.p3{background:linear-gradient(180deg,#cd7f32,#8b4f1e);min-height:70px}
+.podium-medal{font-size:26px}
+.podium-name{font-family:'Oswald',sans-serif;font-weight:700;font-size:12px;margin-top:4px;text-align:center;line-height:1.3;color:#fff}
+.podium-pts{font-size:11px;color:rgba(255,255,255,.85);margin-top:2px}
+.phase-title{font-family:'Oswald',sans-serif;font-size:16px;letter-spacing:2px;text-transform:uppercase;color:var(--green2);text-align:center;margin:20px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.phase-title.purple{color:#c89bf0}
+.lb-total{border-color:rgba(251,191,36,.4)!important;background:rgba(251,191,36,.06)!important}
+.lb-total .lb-score{color:var(--gold2)}
+.lb-total .lb-bar-fill{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.tbd-msg{font-size:13px;color:var(--muted);text-align:center;padding:40px 20px;font-style:italic}
+
+</style>
+</head>
+<body>
+<header>
+  <div style="font-size:42px;margin-bottom:6px">&#9917;</div>
+  <h1>FantaMondiale <span>2026</span></h1>
+  <div class="h-sub">USA &middot; Canada &middot; Messico</div>
+</header>
+<div id="toast"></div>
+<div class="wrap">
+  <div class="main">
+
+    <!-- ADMIN BAR -->
+    <div class="card" id="adminBar" style="display:none">
+      <div class="card-head">&#128275; Admin attivo</div>
+      <div class="card-body">
+        <div class="note-box">&#9888;&#65039; Le modifiche ai risultati qui sono solo per anteprima in questa sessione. Per renderle definitive scrivi i risultati ad Alberto.</div>
+        <button class="btn" style="background:#374151;color:#d1d5db;font-size:11px;padding:5px 10px" onclick="logoutAdmin()">Esci da Admin</button>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs" style="flex-wrap:wrap;gap:3px">
+      <button class="tab active" onclick="setTab('G1',this)">Giornata 1</button>
+      <button class="tab" onclick="setTab('G2',this)">Giornata 2</button>
+      <button class="tab" onclick="setTab('G3',this)">Giornata 3</button>
+      <button class="tab r16-tab" onclick="setTab('R16',this)">Sedicesimi</button>
+      <button class="tab r16-tab" onclick="setTab('OTT',this)">Ottavi</button>
+      <button class="tab r16-tab" onclick="setTab('QUA',this)">Quarti</button>
+      <button class="tab r16-tab" onclick="setTab('SEM',this)">Semifinali</button>
+      <button class="tab r16-tab" onclick="setTab('TER',this)">3°/4° Posto</button>
+      <button class="tab r16-tab" onclick="setTab('FIN',this)">Finale</button>
+      <button class="tab" style="background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.3);color:var(--gold2)" onclick="setTab('CLS',this)">&#127942; Classifiche</button>
+    </div>
+
+    <!-- MATCH/PHASE CARD -->
+    <div class="card">
+      <div class="card-head" id="panelTitle">&#128197; Giornata 1</div>
+      <div class="viewer-bar" id="viewerBar" style="display:none">
+        <label>&#128065; Pronostici di:</label>
+        <select id="viewerSel" onchange="onViewerChange()"></select>
+        <span id="viewerNote" style="font-size:11px;color:#93c5fd"></span>
+      </div>
+      <div id="tableWrap"></div>
+      <div id="R16W"    style="display:none"></div>
+      <div id="OTTW"   style="display:none"></div>
+      <div id="QUAW"   style="display:none"></div>
+      <div id="SEMW"   style="display:none"></div>
+      <div id="FINW"   style="display:none"></div>
+      <div id="TERW"   style="display:none"></div>
+      <div id="CLSW"   style="display:none" class="card-body"></div>
+      <div id="LF"     style="display:none" class="card-body"></div>
+    </div>
+
+  </div>
+  <!-- sidebar vuota (nascosta) -->
+  <div class="side"></div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="modal-bg" id="adminModal">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div style="font-size:36px;margin-bottom:6px">&#128274;</div>
+    <h3>Accesso Admin</h3>
+    <div class="modal-note">Inserisci il PIN per modificare risultati</div>
+    <input type="password" id="pinIn" placeholder="&bull; &bull; &bull; &bull;" maxlength="6"
+      onkeydown="if(event.key==='Enter')checkPin()"
+      style="width:100%;text-align:center;letter-spacing:8px;font-size:22px;margin-bottom:10px">
+    <div class="err-msg" id="pinErr" style="display:none">PIN errato.</div>
+    <div class="modal-btns">
+      <button class="btn btn-amber" onclick="checkPin()">Entra</button>
+      <button class="btn" style="background:#374151;color:#d1d5db" onclick="closeAdmin()">Annulla</button>
+    </div>
+  </div>
+</div>
+
+<!-- FIXED ADMIN BUTTON -->
+<button class="btn btn-amber" id="adminToggleBtn"
+  style="position:fixed;bottom:16px;right:16px;z-index:50;opacity:.7;font-size:11px;box-shadow:0 4px 16px rgba(0,0,0,.4)"
+  onclick="openAdmin()">&#128274; Admin</button>
+
+<script>
+var MATCHES   = [{"id": "M01", "g": "G1", "gr": "A", "data": "11/06 21:00", "casa": "Messico", "fuori": "Sudafrica"}, {"id": "M02", "g": "G1", "gr": "A", "data": "12/06 15:00", "casa": "Corea del Sud", "fuori": "Rep. Ceca"}, {"id": "M03", "g": "G1", "gr": "B", "data": "12/06 18:00", "casa": "Canada", "fuori": "Bosnia"}, {"id": "M04", "g": "G1", "gr": "B", "data": "12/06 21:00", "casa": "Qatar", "fuori": "Svizzera"}, {"id": "M05", "g": "G1", "gr": "C", "data": "13/06 15:00", "casa": "Brasile", "fuori": "Marocco"}, {"id": "M06", "g": "G1", "gr": "C", "data": "13/06 18:00", "casa": "Haiti", "fuori": "Scozia"}, {"id": "M07", "g": "G1", "gr": "D", "data": "13/06 21:00", "casa": "Stati Uniti", "fuori": "Paraguay"}, {"id": "M08", "g": "G1", "gr": "D", "data": "14/06 00:00", "casa": "Australia", "fuori": "Turchia"}, {"id": "M09", "g": "G1", "gr": "E", "data": "14/06 15:00", "casa": "Germania", "fuori": "Curaçao"}, {"id": "M10", "g": "G1", "gr": "E", "data": "14/06 18:00", "casa": "Costa d'Avorio", "fuori": "Ecuador"}, {"id": "M11", "g": "G1", "gr": "F", "data": "14/06 21:00", "casa": "Paesi Bassi", "fuori": "Giappone"}, {"id": "M12", "g": "G1", "gr": "F", "data": "15/06 00:00", "casa": "Svezia", "fuori": "Tunisia"}, {"id": "M13", "g": "G1", "gr": "G", "data": "15/06 15:00", "casa": "Belgio", "fuori": "Egitto"}, {"id": "M14", "g": "G1", "gr": "G", "data": "15/06 18:00", "casa": "Iran", "fuori": "Nuova Zelanda"}, {"id": "M15", "g": "G1", "gr": "H", "data": "15/06 21:00", "casa": "Spagna", "fuori": "Capo Verde"}, {"id": "M16", "g": "G1", "gr": "H", "data": "16/06 00:00", "casa": "Arabia Saudita", "fuori": "Uruguay"}, {"id": "M17", "g": "G1", "gr": "I", "data": "16/06 15:00", "casa": "Francia", "fuori": "Senegal"}, {"id": "M18", "g": "G1", "gr": "I", "data": "16/06 18:00", "casa": "Iraq", "fuori": "Norvegia"}, {"id": "M19", "g": "G1", "gr": "J", "data": "16/06 21:00", "casa": "Argentina", "fuori": "Algeria"}, {"id": "M20", "g": "G1", "gr": "J", "data": "17/06 00:00", "casa": "Austria", "fuori": "Giordania"}, {"id": "M21", "g": "G1", "gr": "K", "data": "17/06 15:00", "casa": "Portogallo", "fuori": "RD Congo"}, {"id": "M22", "g": "G1", "gr": "K", "data": "17/06 18:00", "casa": "Uzbekistan", "fuori": "Colombia"}, {"id": "M23", "g": "G1", "gr": "L", "data": "17/06 21:00", "casa": "Inghilterra", "fuori": "Croazia"}, {"id": "M24", "g": "G1", "gr": "L", "data": "18/06 00:00", "casa": "Ghana", "fuori": "Panama"}, {"id": "M25", "g": "G2", "gr": "A", "data": "17/06 19:00", "casa": "Messico", "fuori": "Corea del Sud"}, {"id": "M26", "g": "G2", "gr": "A", "data": "17/06 21:00", "casa": "Sudafrica", "fuori": "Rep. Ceca"}, {"id": "M27", "g": "G2", "gr": "B", "data": "18/06 18:00", "casa": "Canada", "fuori": "Qatar"}, {"id": "M28", "g": "G2", "gr": "B", "data": "18/06 21:00", "casa": "Bosnia", "fuori": "Svizzera"}, {"id": "M29", "g": "G2", "gr": "C", "data": "19/06 00:00", "casa": "Brasile", "fuori": "Haiti"}, {"id": "M30", "g": "G2", "gr": "C", "data": "19/06 18:00", "casa": "Marocco", "fuori": "Scozia"}, {"id": "M31", "g": "G2", "gr": "D", "data": "19/06 21:00", "casa": "Stati Uniti", "fuori": "Australia"}, {"id": "M32", "g": "G2", "gr": "D", "data": "20/06 00:00", "casa": "Paraguay", "fuori": "Turchia"}, {"id": "M33", "g": "G2", "gr": "E", "data": "20/06 18:00", "casa": "Germania", "fuori": "Costa d'Avorio"}, {"id": "M34", "g": "G2", "gr": "E", "data": "20/06 21:00", "casa": "Curaçao", "fuori": "Ecuador"}, {"id": "M35", "g": "G2", "gr": "F", "data": "21/06 00:00", "casa": "Paesi Bassi", "fuori": "Svezia"}, {"id": "M36", "g": "G2", "gr": "F", "data": "21/06 18:00", "casa": "Giappone", "fuori": "Tunisia"}, {"id": "M37", "g": "G2", "gr": "G", "data": "21/06 21:00", "casa": "Belgio", "fuori": "Iran"}, {"id": "M38", "g": "G2", "gr": "G", "data": "22/06 00:00", "casa": "Egitto", "fuori": "Nuova Zelanda"}, {"id": "M39", "g": "G2", "gr": "H", "data": "22/06 18:00", "casa": "Spagna", "fuori": "Arabia Saudita"}, {"id": "M40", "g": "G2", "gr": "H", "data": "22/06 21:00", "casa": "Capo Verde", "fuori": "Uruguay"}, {"id": "M41", "g": "G2", "gr": "I", "data": "23/06 00:00", "casa": "Francia", "fuori": "Iraq"}, {"id": "M42", "g": "G2", "gr": "I", "data": "23/06 18:00", "casa": "Senegal", "fuori": "Norvegia"}, {"id": "M43", "g": "G2", "gr": "J", "data": "23/06 21:00", "casa": "Argentina", "fuori": "Austria"}, {"id": "M44", "g": "G2", "gr": "J", "data": "24/06 01:00", "casa": "Algeria", "fuori": "Giordania"}, {"id": "M45", "g": "G2", "gr": "K", "data": "24/06 18:00", "casa": "Portogallo", "fuori": "Uzbekistan"}, {"id": "M46", "g": "G2", "gr": "K", "data": "24/06 21:00", "casa": "RD Congo", "fuori": "Colombia"}, {"id": "M47", "g": "G2", "gr": "L", "data": "23/06 22:00", "casa": "Inghilterra", "fuori": "Ghana"}, {"id": "M48", "g": "G2", "gr": "L", "data": "24/06 01:00", "casa": "Panama", "fuori": "Croazia"}, {"id": "M49", "g": "G3", "gr": "A", "data": "22/06 18:00", "casa": "Messico", "fuori": "Rep. Ceca"}, {"id": "M50", "g": "G3", "gr": "A", "data": "22/06 18:00", "casa": "Sudafrica", "fuori": "Corea del Sud"}, {"id": "M51", "g": "G3", "gr": "B", "data": "22/06 21:00", "casa": "Canada", "fuori": "Svizzera"}, {"id": "M52", "g": "G3", "gr": "B", "data": "22/06 21:00", "casa": "Bosnia", "fuori": "Qatar"}, {"id": "M53", "g": "G3", "gr": "C", "data": "23/06 00:00", "casa": "Brasile", "fuori": "Scozia"}, {"id": "M54", "g": "G3", "gr": "C", "data": "23/06 00:00", "casa": "Marocco", "fuori": "Haiti"}, {"id": "M55", "g": "G3", "gr": "D", "data": "23/06 18:00", "casa": "Stati Uniti", "fuori": "Turchia"}, {"id": "M56", "g": "G3", "gr": "D", "data": "23/06 18:00", "casa": "Paraguay", "fuori": "Australia"}, {"id": "M57", "g": "G3", "gr": "E", "data": "23/06 21:00", "casa": "Germania", "fuori": "Ecuador"}, {"id": "M58", "g": "G3", "gr": "E", "data": "23/06 21:00", "casa": "Curaçao", "fuori": "Costa d'Avorio"}, {"id": "M59", "g": "G3", "gr": "F", "data": "24/06 00:00", "casa": "Paesi Bassi", "fuori": "Tunisia"}, {"id": "M60", "g": "G3", "gr": "F", "data": "24/06 00:00", "casa": "Giappone", "fuori": "Svezia"}, {"id": "M61", "g": "G3", "gr": "G", "data": "24/06 18:00", "casa": "Belgio", "fuori": "Nuova Zelanda"}, {"id": "M62", "g": "G3", "gr": "G", "data": "24/06 18:00", "casa": "Egitto", "fuori": "Iran"}, {"id": "M63", "g": "G3", "gr": "H", "data": "24/06 21:00", "casa": "Spagna", "fuori": "Uruguay"}, {"id": "M64", "g": "G3", "gr": "H", "data": "24/06 21:00", "casa": "Capo Verde", "fuori": "Arabia Saudita"}, {"id": "M65", "g": "G3", "gr": "I", "data": "25/06 00:00", "casa": "Francia", "fuori": "Norvegia"}, {"id": "M66", "g": "G3", "gr": "I", "data": "25/06 00:00", "casa": "Senegal", "fuori": "Iraq"}, {"id": "M67", "g": "G3", "gr": "J", "data": "25/06 18:00", "casa": "Argentina", "fuori": "Giordania"}, {"id": "M68", "g": "G3", "gr": "J", "data": "25/06 18:00", "casa": "Algeria", "fuori": "Austria"}, {"id": "M69", "g": "G3", "gr": "K", "data": "25/06 21:00", "casa": "Portogallo", "fuori": "Colombia"}, {"id": "M70", "g": "G3", "gr": "K", "data": "25/06 21:00", "casa": "RD Congo", "fuori": "Uzbekistan"}, {"id": "M71", "g": "G3", "gr": "L", "data": "26/06 00:00", "casa": "Inghilterra", "fuori": "Panama"}, {"id": "M72", "g": "G3", "gr": "L", "data": "26/06 00:00", "casa": "Croazia", "fuori": "Ghana"}];
+var R16       = [{"id": "R73", "data": "28/06 21:00", "casa": "Sudafrica", "fuori": "Canada"}, {"id": "R76", "data": "29/06 19:00", "casa": "Brasile", "fuori": "Giappone"}, {"id": "R74", "data": "29/06 22:30", "casa": "Germania", "fuori": "Paraguay"}, {"id": "R75", "data": "30/06 03:00", "casa": "Paesi Bassi", "fuori": "Marocco"}, {"id": "R78", "data": "30/06 19:00", "casa": "Costa d'Avorio", "fuori": "Norvegia"}, {"id": "R77", "data": "30/06 23:00", "casa": "Francia", "fuori": "Svezia"}, {"id": "R79", "data": "01/07 03:00", "casa": "Messico", "fuori": "Ecuador"}, {"id": "R80", "data": "01/07 18:00", "casa": "Inghilterra", "fuori": "RD Congo"}, {"id": "R82", "data": "01/07 22:00", "casa": "Belgio", "fuori": "Senegal"}, {"id": "R81", "data": "02/07 02:00", "casa": "Stati Uniti", "fuori": "Bosnia"}, {"id": "R84", "data": "02/07 21:00", "casa": "Spagna", "fuori": "Austria"}, {"id": "R83", "data": "03/07 01:00", "casa": "Portogallo", "fuori": "Croazia"}, {"id": "R85", "data": "03/07 05:00", "casa": "Svizzera", "fuori": "Algeria"}, {"id": "R88", "data": "03/07 21:00", "casa": "Australia", "fuori": "Egitto"}, {"id": "R86", "data": "04/07 00:00", "casa": "Argentina", "fuori": "Capo Verde"}, {"id": "R87", "data": "04/07 03:30", "casa": "Colombia", "fuori": "Ghana"}];
+var OTTAVI    = [{"id": "O1", "data": "04/07 19:00", "casa": "Canada", "fuori": "Marocco"}, {"id": "O2", "data": "04/07 23:00", "casa": "Paraguay", "fuori": "Francia"}, {"id": "O3", "data": "05/07 22:00", "casa": "Brasile", "fuori": "Norvegia"}, {"id": "O4", "data": "06/07 02:00", "casa": "Messico", "fuori": "Inghilterra"}, {"id": "O5", "data": "06/07 21:00", "casa": "Portogallo", "fuori": "Spagna"}, {"id": "O6", "data": "07/07 02:00", "casa": "Stati Uniti", "fuori": "Belgio"}, {"id": "O7", "data": "07/07 18:00", "casa": "Argentina", "fuori": "Egitto"}, {"id": "O8", "data": "07/07 22:00", "casa": "Svizzera", "fuori": "Colombia"}];
+var QUARTI    = [{"id":"Q1","data":"09/07 22:00","casa":"Francia","fuori":"Marocco"},{"id":"Q2","data":"10/07 21:00","casa":"Spagna","fuori":"Belgio"},{"id":"Q3","data":"11/07 23:00","casa":"Norvegia","fuori":"Inghilterra"},{"id":"Q4","data":"12/07 03:00","casa":"Argentina","fuori":"Svizzera"}];
+var SEMI      = [];
+var FINALE    = [];
+var FRIENDS   = ["Alberto", "Alessandro", "Andrea", "Francesco", "Massimo", "Maurizio", "Roberto", "Simone"];
+var GRP_COL   = {"A": "#e74c3c", "B": "#e67e22", "C": "#f1c40f", "D": "#2ecc71", "E": "#1abc9c", "F": "#3498db", "G": "#9b59b6", "H": "#e91e63", "I": "#00bcd4", "J": "#ff5722", "K": "#8bc34a", "L": "#607d8b"};
+var PREDS     = {"Alberto": {"M01": "1", "M02": "2", "M03": "1", "M05": "1", "M06": "2", "M07": "1", "M09": "1", "M11": "1", "M13": "1", "M14": "X", "M15": "1", "M17": "1", "M18": "2", "M19": "1", "M21": "1", "M23": "1", "M04": "2", "M08": "X", "M10": "X", "M12": "1", "M16": "2", "M20": "X", "M22": "2", "M24": "1", "M25": "1", "M26": "X", "M27": "1", "M28": "2", "M29": "1", "M30": "X", "M31": "1", "M32": "X", "M33": "1", "M34": "2", "M35": "1", "M36": "1", "M37": "1", "M38": "1", "M39": "1", "M40": "2", "M41": "1", "M42": "2", "M43": "1", "M44": "1", "M45": "1", "M46": "2", "M49": "1", "M50": "2", "M51": "1", "M52": "2", "M53": "1", "M54": "X", "M55": "1", "M56": "X", "M57": "1", "M58": "X", "M59": "1", "M60": "X", "M61": "1", "M62": "X", "M63": "1", "M64": "2", "M65": "1", "M66": "1", "M67": "1", "M68": "X", "M69": "X", "M70": "1", "M71": "1", "M72": "X", "M47": "1", "M48": "2"}, "Roberto": {"M01": "1", "M02": "2", "M03": "X", "M04": "2", "M05": "1", "M06": "2", "M07": "2", "M08": "2", "M09": "1", "M10": "X", "M11": "1", "M12": "1", "M13": "1", "M14": "X", "M15": "1", "M16": "2", "M17": "1", "M18": "2", "M19": "1", "M20": "1", "M21": "1", "M22": "2", "M23": "1", "M24": "1", "M25": "X", "M26": "2", "M27": "1", "M28": "X", "M29": "1", "M30": "X", "M31": "1", "M32": "1", "M33": "1", "M34": "2", "M35": "1", "M36": "1", "M37": "1", "M38": "1", "M39": "1", "M40": "2", "M41": "1", "M42": "2", "M43": "1", "M44": "1", "M45": "1", "M46": "X", "M49": "2", "M50": "1", "M51": "X", "M52": "1", "M53": "1", "M54": "1", "M55": "1", "M56": "1", "M57": "1", "M58": "2", "M59": "1", "M60": "2", "M61": "1", "M62": "1", "M63": "1", "M64": "2", "M65": "X", "M66": "1", "M67": "1", "M68": "X", "M69": "1", "M70": "1", "M71": "1", "M72": "1", "M47": "X", "M48": "1"}, "Massimo": {"M01": "1", "M02": "2", "M03": "1", "M04": "2", "M05": "1", "M06": "2", "M07": "1", "M08": "2", "M09": "1", "M10": "1", "M11": "1", "M12": "X", "M13": "1", "M14": "2", "M15": "1", "M16": "X", "M17": "1", "M18": "2", "M19": "1", "M20": "1", "M21": "1", "M22": "2", "M23": "X", "M24": "1", "M25": "1", "M26": "2", "M27": "1", "M28": "X", "M29": "1", "M30": "1", "M31": "X", "M32": "1", "M33": "1", "M34": "2", "M35": "1", "M36": "1", "M37": "1", "M38": "1", "M39": "1", "M40": "2", "M41": "1", "M42": "X", "M43": "X", "M44": "1", "M45": "1", "M46": "2", "M49": "X", "M50": "X", "M51": "1", "M52": "1", "M53": "1", "M54": "1", "M55": "2", "M56": "X", "M57": "1", "M58": "2", "M59": "1", "M60": "1", "M61": "1", "M62": "1", "M63": "1", "M64": "2", "M65": "1", "M66": "1", "M67": "1", "M68": "2", "M69": "1", "M70": "1", "M71": "1", "M72": "X", "M47": "X", "M48": "2"}, "Maurizio": {"M01": "1", "M02": "1", "M03": "1", "M04": "2", "M05": "1", "M06": "2", "M07": "1", "M08": "2", "M09": "1", "M10": "X", "M11": "X", "M12": "1", "M13": "1", "M14": "1", "M15": "1", "M16": "2", "M17": "1", "M18": "2", "M19": "1", "M20": "1", "M21": "1", "M22": "2", "M23": "X", "M24": "1", "M25": "1", "M26": "2", "M27": "1", "M28": "2", "M29": "1", "M30": "1", "M31": "1", "M32": "2", "M33": "1", "M34": "2", "M35": "X", "M36": "1", "M37": "1", "M38": "1", "M39": "1", "M40": "2", "M41": "1", "M42": "2", "M43": "1", "M44": "1", "M45": "1", "M46": "2", "M49": "1", "M50": "2", "M51": "2", "M52": "1", "M53": "1", "M54": "1", "M55": "X", "M56": "1", "M57": "1", "M58": "2", "M59": "1", "M60": "X", "M61": "1", "M62": "1", "M63": "X", "M64": "2", "M65": "X", "M66": "1", "M67": "1", "M68": "X", "M69": "X", "M70": "1", "M71": "1", "M72": "1", "M47": "X", "M48": "1"}, "Andrea": {"M01": "X", "M02": "2", "M03": "1", "M04": "2", "M05": "1", "M06": "2", "M07": "1", "M08": "X", "M09": "1", "M10": "1", "M11": "1", "M12": "X", "M13": "1", "M14": "1", "M15": "1", "M16": "2", "M17": "1", "M18": "2", "M19": "1", "M20": "1", "M21": "1", "M22": "2", "M23": "X", "M24": "1", "M25": "1", "M26": "X", "M27": "1", "M28": "2", "M29": "1", "M30": "1", "M31": "1", "M32": "2", "M33": "1", "M34": "2", "M35": "1", "M36": "X", "M37": "1", "M38": "1", "M39": "1", "M40": "2", "M41": "1", "M42": "2", "M43": "1", "M44": "1", "M45": "1", "M46": "2", "M49": "X", "M50": "1", "M51": "X", "M52": "1", "M53": "1", "M54": "1", "M55": "2", "M56": "X", "M57": "1", "M58": "2", "M59": "1", "M60": "X", "M61": "1", "M62": "X", "M63": "1", "M64": "2", "M65": "X", "M66": "X", "M67": "1", "M68": "X", "M69": "X", "M70": "1", "M71": "1", "M72": "X", "M47": "X", "M48": "1"}, "Simone": {"M01": "1", "M02": "2", "M03": "X", "M04": "2", "M05": "1", "M06": "2", "M07": "X", "M08": "X", "M09": "1", "M10": "1", "M11": "1", "M12": "X", "M13": "1", "M14": "X", "M15": "1", "M16": "X", "M17": "1", "M18": "2", "M19": "1", "M20": "X", "M21": "1", "M22": "2", "M23": "X", "M24": "1", "M25": "1", "M26": "2", "M27": "1", "M28": "X", "M29": "1", "M30": "X", "M31": "1", "M32": "X", "M33": "1", "M34": "X", "M35": "X", "M36": "X", "M37": "1", "M38": "1", "M39": "1", "M40": "2", "M41": "1", "M42": "X", "M43": "1", "M44": "X", "M45": "1", "M46": "1", "M47": "2", "M48": "1", "M49": "X", "M50": "1", "M51": "X", "M52": "1", "M53": "1", "M54": "X", "M55": "X", "M56": "X", "M57": "1", "M58": "X", "M59": "1", "M60": "2", "M61": "1", "M62": "X", "M63": "X", "M64": "2", "M65": "2", "M66": "1", "M67": "1", "M68": "1", "M69": "X", "M70": "1", "M71": "1", "M72": "2"}, "Alessandro": {"M01": "1", "M02": "2", "M03": "1", "M04": "2", "M05": "1", "M06": "2", "M07": "1", "M08": "2", "M09": "1", "M10": "X", "M11": "1", "M12": "1", "M13": "1", "M14": "1", "M15": "1", "M16": "2", "M17": "1", "M18": "2", "M19": "1", "M20": "1", "M21": "1", "M22": "2", "M23": "1", "M24": "1", "M25": "1", "M26": "2", "M27": "1", "M28": "2", "M29": "1", "M30": "1", "M31": "1", "M32": "2", "M33": "1", "M34": "2", "M35": "1", "M36": "1", "M37": "1", "M38": "1", "M39": "1", "M40": "2", "M41": "1", "M42": "2", "M43": "1", "M44": "1", "M45": "1", "M46": "2", "M47": "1", "M48": "2", "M49": "1", "M50": "1", "M51": "2", "M52": "1", "M53": "1", "M54": "1", "M55": "2", "M56": "1", "M57": "1", "M58": "2", "M59": "1", "M60": "2", "M61": "1", "M62": "1", "M63": "1", "M64": "2", "M65": "1", "M66": "1", "M67": "1", "M68": "X", "M69": "1", "M70": "1", "M71": "1", "M72": "1"}, "Francesco": {"M01": "1", "M02": "2", "M03": "2", "M04": "2", "M05": "1", "M06": "2", "M07": "1", "M08": "X", "M09": "1", "M10": "X", "M11": "X", "M12": "1", "M13": "1", "M14": "1", "M15": "1", "M16": "2", "M17": "1", "M18": "2", "M19": "1", "M20": "1", "M21": "1", "M22": "2", "M23": "X", "M24": "1", "M25": "1", "M26": "2", "M47": "X", "M48": "1", "M45": "1", "M46": "2", "M44": "1", "M43": "1", "M41": "1", "M42": "2", "M39": "1", "M40": "2", "M37": "1", "M38": "X", "M35": "1", "M36": "X", "M31": "1", "M32": "2", "M33": "1", "M27": "1", "M28": "X", "M29": "1", "M30": "X", "M34": "2", "M49": "2", "M50": "1", "M51": "1", "M52": "1", "M53": "1", "M54": "1", "M55": "2", "M56": "1", "M57": "1", "M58": "2", "M59": "1", "M60": "2", "M61": "1", "M62": "X", "M63": "1", "M64": "X", "M65": "X", "M66": "1", "M67": "1", "M68": "2", "M69": "1", "M70": "1", "M71": "1", "M72": "1"}};
+var RESULTS   = {"M01": "1", "M02": "1", "M03": "X", "M04": "X", "M05": "X", "M06": "2", "M07": "1", "M08": "1", "M09": "1", "M10": "1", "M11": "X", "M12": "1", "M13": "X", "M15": "X", "M14": "X", "M16": "X", "M19": "1", "M17": "1", "M18": "2", "M20": "1", "M21": "X", "M23": "1", "M22": "2", "M24": "1", "M25": "1", "M27": "1", "M28": "2", "M26": "X", "M31": "1", "M29": "1", "M30": "1", "M32": "1", "M33": "1", "M34": "X", "M35": "1", "M36": "1", "M37": "X", "M39": "1", "M40": "X", "M38": "1", "M41": "1", "M42": "2", "M43": "1", "M44": "1", "M45": "1", "M46": "2", "M47": "X", "M48": "2", "M49": "1", "M50": "1", "M51": "2", "M52": "1", "M53": "1", "M54": "1", "M55": "2", "M56": "X", "M57": "2", "M58": "2", "M59": "1", "M60": "X", "M61": "1", "M62": "X", "M63": "1", "M64": "X", "M65": "1", "M66": "1", "M67": "1", "M68": "X", "M69": "X", "M70": "1", "M71": "1", "M72": "1"};
+var R16PREDS  = {"Alberto": {"R73": "2", "R76": "1", "R74": "1", "R75": "1", "R78": "2", "R77": "1", "R79": "1", "R80": "1", "R82": "1", "R81": "1", "R84": "1", "R83": "1", "R85": "1", "R88": "2", "R86": "1", "R87": "2"}, "Alessandro": {"R73": "2", "R76": "1", "R74": "1", "R75": "1", "R78": "2", "R77": "1", "R79": "1", "R80": "1", "R82": "1", "R81": "1", "R84": "1", "R83": "1", "R85": "1", "R88": "2", "R86": "1", "R87": "1"}, "Andrea": {"R73": "2", "R76": "1", "R74": "1", "R75": "2", "R78": "2", "R77": "1", "R79": "1", "R80": "1", "R82": "1", "R81": "2", "R84": "1", "R83": "2", "R85": "1", "R88": "1", "R86": "1", "R87": "1"}, "Francesco": {"R73": "2", "R76": "1", "R74": "1", "R75": "2", "R78": "2", "R77": "1", "R79": "1", "R80": "1", "R82": "1", "R81": "1", "R84": "1", "R83": "1", "R85": "1", "R88": "2", "R86": "1", "R87": "1"}, "Massimo": {"R73": "2", "R76": "1", "R74": "1", "R75": "2", "R78": "2", "R77": "1", "R79": "1", "R80": "1", "R82": "2", "R81": "1", "R84": "1", "R83": "2", "R85": "2", "R88": "2", "R86": "1", "R87": "1"}, "Maurizio": {"R73": "2", "R76": "1", "R74": "1", "R75": "1", "R78": "2", "R77": "1", "R79": "1", "R80": "1", "R82": "1", "R81": "1", "R84": "1", "R83": "1", "R85": "1", "R88": "2", "R86": "1", "R87": "1"}, "Roberto": {"R73": "2", "R76": "1", "R74": "1", "R75": "1", "R78": "2", "R77": "1", "R79": "1", "R80": "1", "R82": "1", "R81": "1", "R84": "1", "R83": "2", "R85": "1", "R88": "2", "R86": "1", "R87": "1"}, "Simone": {"R73": "2", "R76": "1", "R74": "1", "R75": "2", "R78": "2", "R77": "1", "R79": "2", "R80": "1", "R82": "2", "R81": "1", "R84": "1", "R83": "1", "R85": "1", "R88": "2", "R86": "1", "R87": "1"}};
+var R16RESULTS= {"R73": "2", "R76": "1", "R74": "2", "R75": "2", "R77": "1", "R78": "2", "R79": "1", "R80": "1", "R81": "1", "R82": "1", "R83": "1", "R84": "1", "R85": "1", "R86": "1", "R88": "2", "R87": "1"};
+var OTTPREDS  = {"Alberto": {"O1": "2", "O2": "2", "O3": "2", "O4": "1", "O5": "2", "O6": "1", "O7": "1", "O8": "2"}, "Alessandro": {"O1": "2", "O2": "2", "O3": "2", "O4": "2", "O5": "2", "O6": "1", "O7": "1", "O8": "1"}, "Andrea": {"O1": "2", "O2": "2", "O3": "1", "O4": "1", "O5": "2", "O6": "1", "O7": "1", "O8": "2"}, "Francesco": {"O1": "2", "O2": "2", "O3": "1", "O4": "2", "O5": "2", "O6": "1", "O7": "1", "O8": "2"}, "Massimo": {"O1": "2", "O2": "2", "O3": "1", "O4": "1", "O5": "2", "O6": "1", "O7": "2", "O8": "2"}, "Maurizio": {"O1": "2", "O2": "2", "O3": "1", "O4": "2", "O5": "2", "O6": "1", "O7": "1", "O8": "2"}, "Roberto": {"O1": "2", "O2": "2", "O3": "1", "O4": "2", "O5": "2", "O6": "1", "O7": "1", "O8": "2"}, "Simone": {"O1": "2", "O2": "2", "O3": "1", "O4": "1", "O5": "2", "O6": "1", "O7": "1", "O8": "2"}};
+var OTTRESULTS= {"O1": "2", "O2": "2", "O3": "2", "O4": "2", "O5": "2", "O6": "2", "O7": "1", "O8": "1"};
+var QUARTIPREDS  = {"Alberto": {"Q1":"1","Q2":"1","Q3":"2","Q4":"1"}, "Alessandro": {"Q1":"1","Q2":"1","Q3":"1","Q4":"1"}, "Andrea": {"Q1":"1","Q2":"1","Q3":"1","Q4":"1"}, "Francesco": {"Q1":"1","Q2":"1","Q3":"2","Q4":"1"}, "Massimo": {"Q1":"1","Q2":"1","Q3":"2","Q4":"2"}, "Maurizio": {"Q1":"2","Q2":"1","Q3":"1","Q4":"2"}, "Roberto": {"Q1":"1","Q2":"1","Q3":"2","Q4":"1"}, "Simone": {"Q1":"2","Q2":"1","Q3":"2","Q4":"1"}};
+var QUARTIRESULTS= {"Q1":"1"};
+var SEMIPREDS    = {"Alberto": {}, "Alessandro": {}, "Andrea": {}, "Francesco": {}, "Massimo": {}, "Maurizio": {}, "Roberto": {}, "Simone": {}};
+var SEMIRESULTS  = {};
+var FINALEPREDS  = {"Alberto": {}, "Alessandro": {}, "Andrea": {}, "Francesco": {}, "Massimo": {}, "Maurizio": {}, "Roberto": {}, "Simone": {}};
+var FINALERESULTS= {};
+var TER3PREDS   = {"Alberto": {}, "Alessandro": {}, "Andrea": {}, "Francesco": {}, "Massimo": {}, "Maurizio": {}, "Roberto": {}, "Simone": {}};
+var TER3RESULTS  = {};
+var TER3         = [];
+var ADMIN_PIN = "1926";
+
+var VU = FRIENDS[0];
+var AT = 'G1';
+var isAdmin = false;
+
+/* ── GETTERS ── */
+function gp(f)   {return PREDS[f]||{};}
+function gpR16(f){return R16PREDS[f]||{};}
+function gpOTT(f){return OTTPREDS[f]||{};}
+function gpQUA(f){return QUARTIPREDS[f]||{};}
+function gpSEM(f){return SEMIPREDS[f]||{};}
+function gpFIN(f){return FINALEPREDS[f]||{};}
+function gpTER(f){return TER3PREDS[f]||{};}
+
+/* ── VIEWER BAR ── */
+function uvb(){
+  var bar=document.getElementById('viewerBar');
+  if(AT==='CLS'){bar.style.display='none';return;}
+  bar.style.display='flex';
+  var sel=document.getElementById('viewerSel');sel.innerHTML='';
+  FRIENDS.forEach(function(f){
+    var fp = AT==='R16'?gpR16(f):AT==='OTT'?gpOTT(f):AT==='QUA'?gpQUA(f):AT==='SEM'?gpSEM(f):AT==='FIN'?gpFIN(f):AT==='TER'?gpTER(f):gp(f);
+    var cnt=Object.keys(fp).length;
+    var opt=document.createElement('option');
+    opt.value=f;opt.textContent=f+(cnt>0?' ('+cnt+')':'');
+    if(f===VU)opt.selected=true;sel.appendChild(opt);
+  });
+  var fp2=AT==='R16'?gpR16(VU):AT==='OTT'?gpOTT(VU):AT==='QUA'?gpQUA(VU):AT==='SEM'?gpSEM(VU):AT==='FIN'?gpFIN(VU):AT==='TER'?gpTER(VU):gp(VU);
+  document.getElementById('viewerNote').textContent=Object.keys(fp2).length+' pronostici';
+}
+function onViewerChange(){VU=document.getElementById('viewerSel').value;uvb();renderPhase();}
+
+/* ── HIDE ALL ── */
+function hideAll(){
+  ['tableWrap','R16W','OTTW','QUAW','SEMW','FINW','TERW','CLSW','LF'].forEach(function(id){
+    document.getElementById(id).style.display='none';
+  });
+}
+
+/* ── GENERIC PHASE RENDER ── */
+function renderMatchTable(matches, predsObj, resultsObj, wrapId, canEdit, label){
+  hideAll();
+  var w=document.getElementById(wrapId); w.style.display='block';
+  if(!matches||matches.length===0){
+    w.innerHTML='<div class="tbd-msg">&#128197; Partite non ancora definite.<br>Aggiornamento in arrivo!</div>';
+    return;
+  }
+  var vP=predsObj[VU]||{};
+  var rows='',lastGr='';
+  matches.forEach(function(m){
+    if(m.gr&&m.gr!==lastGr){lastGr=m.gr;rows+='<tr class="divider-row"><td colspan="7">Gruppo '+m.gr+'</td></tr>';}
+    var myV=vP[m.id]||'',real=resultsObj[m.id]||'';
+    var ok=real&&myV===real,ko=real&&myV&&myV!==real;
+    var icon=ok?'\u2705':ko?'\u274c':real?'\u26aa':'';
+    var c=m.gr?GRP_COL[m.gr]:'#9b59b6';
+    var grpCell=m.gr?'<td><span class="grp-badge" style="background:'+c+'22;color:'+c+';border-color:'+c+'44">'+m.gr+'</span></td>':'';
+    var realCell=isAdmin
+      ?'<select class="real'+(real?' filled':'')+'" onchange="onRealAny(this)" data-wrap="'+wrapId+'" data-id="'+m.id+'">'
+        +'<option value="">-</option><option value="1"'+(real==='1'?' selected':'')+'>1</option>'
+        +'<option value="X"'+(real==='X'?' selected':'')+'>X</option>'
+        +'<option value="2"'+(real==='2'?' selected':'')+'>2</option></select>'
+      :'<span class="real-val'+(real?' filled':'')+'">'+(real||'-')+'</span>';
+    var predCell='<span class="pred-val'+(myV?' filled':'')+'">'+(myV||'-')+'</span>';
+    rows+='<tr>'
+      +'<td style="color:#6b7280;font-size:11px">'+m.id+'</td>'
+      +(m.gr?grpCell:'')
+      +'<td class="match-date">'+m.data+'</td>'
+      +'<td class="match-name">'+m.casa+' - '+m.fuori+'</td>'
+      +'<td class="'+(ok?'ok':ko?'ko':'')+'">'+predCell+'</td>'
+      +'<td>'+realCell+'</td>'
+      +'<td style="font-size:16px;text-align:center">'+icon+'</td>'
+      +'</tr>';
+  });
+  w.innerHTML='<div class="tbl-wrap"><table><thead><tr><th>#</th>'+(matches[0]&&matches[0].gr?'<th>Grp</th>':'')+'<th>Data</th>'
+    +'<th style="text-align:left;min-width:170px">Partita</th>'
+    +'<th>'+label+'</th><th>Risultato</th><th></th>'
+    +'</tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+
+function renderGirone(g){
+  hideAll();
+  document.getElementById('tableWrap').style.display='block';
+  var ms=MATCHES.filter(function(m){return m.g===g;});
+  var vP=gp(VU),rows='',lastGr='';
+  ms.forEach(function(m){
+    if(m.gr!==lastGr){lastGr=m.gr;rows+='<tr class="divider-row"><td colspan="7">Gruppo '+m.gr+'</td></tr>';}
+    var myV=vP[m.id]||'',real=RESULTS[m.id]||'';
+    var ok=real&&myV===real,ko=real&&myV&&myV!==real;
+    var icon=ok?'\u2705':ko?'\u274c':real?'\u26aa':'';
+    var c=GRP_COL[m.gr];
+    var realCell=isAdmin
+      ?'<select class="real'+(real?' filled':'')+'" onchange="onRealGirone(this)" data-id="'+m.id+'"">'
+        +'<option value="">-</option><option value="1"'+(real==='1'?' selected':'')+'>1</option>'
+        +'<option value="X"'+(real==='X'?' selected':'')+'>X</option>'
+        +'<option value="2"'+(real==='2'?' selected':'')+'>2</option></select>'
+      :'<span class="real-val'+(real?' filled':'')+'">'+(real||'-')+'</span>';
+    rows+='<tr>'
+      +'<td style="color:#6b7280;font-size:11px">'+m.id+'</td>'
+      +'<td><span class="grp-badge" style="background:'+c+'22;color:'+c+';border-color:'+c+'44">'+m.gr+'</span></td>'
+      +'<td class="match-date">'+m.data+'</td>'
+      +'<td class="match-name">'+m.casa+' - '+m.fuori+'</td>'
+      +'<td class="'+(ok?'ok':ko?'ko':'')+'"><span class="pred-val'+(myV?' filled':'')+'">'+(myV||'-')+'</span></td>'
+      +'<td>'+realCell+'</td>'
+      +'<td style="font-size:16px;text-align:center">'+icon+'</td>'
+      +'</tr>';
+  });
+  document.getElementById('tableWrap').innerHTML='<div class="tbl-wrap"><table><thead><tr>'
+    +'<th>#</th><th>Grp</th><th>Data</th><th style="text-align:left;min-width:160px">Partita</th>'
+    +'<th>'+VU+'</th><th>Risultato</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+
+function renderPhase(){
+  if(AT==='G1'||AT==='G2'||AT==='G3'){renderGirone(AT);return;}
+  if(AT==='R16'){renderMatchTable(R16,R16PREDS,R16RESULTS,'R16W',isAdmin,VU);return;}
+  if(AT==='OTT'){renderMatchTable(OTTAVI,OTTPREDS,OTTRESULTS,'OTTW',isAdmin,VU);return;}
+  if(AT==='QUA'){renderMatchTable(QUARTI,QUARTIPREDS,QUARTIRESULTS,'QUAW',isAdmin,VU);return;}
+  if(AT==='SEM'){renderMatchTable(SEMI,SEMIPREDS,SEMIRESULTS,'SEMW',isAdmin,VU);return;}
+  if(AT==='FIN'){renderMatchTable(FINALE,FINALEPREDS,FINALERESULTS,'FINW',isAdmin,VU);return;}
+  if(AT==='TER'){renderMatchTable(TER3,TER3PREDS,TER3RESULTS,'TERW',isAdmin,VU);return;}
+  if(AT==='CLS'){renderClassifiche();return;}
+}
+
+/* ── REAL RESULT HANDLERS ── */
+function onRealGirone(sel){var id=sel.dataset.id;
+  RESULTS[id]=sel.value;sel.className='real'+(sel.value?' filled':'');
+  toast('Risultato '+id+' aggiornato');renderClassifiche&&AT==='CLS'&&renderClassifiche();
+}
+var PHASE_RESULTS={'R16W':R16RESULTS,'OTTW':OTTRESULTS,'QUAW':QUARTIRESULTS,'SEMW':SEMIRESULTS,'FINW':FINALERESULTS,'TERW':TER3RESULTS};
+function onRealAny(sel){var wrapId=sel.getAttribute("data-wrap");var id=sel.getAttribute("data-id");
+  PHASE_RESULTS[wrapId][id]=sel.value;sel.className='real'+(sel.value?' filled':'');
+  toast('Risultato '+id+' aggiornato');
+}
+
+/* ── SCORES ── */
+function calcScore(friends,predsMap,resultsMap,matchList){
+  return friends.map(function(f){
+    var fp=predsMap[f]||{},pts=0;
+    matchList.forEach(function(m){if(resultsMap[m.id]&&fp[m.id]===resultsMap[m.id])pts++;});
+    return{name:f,pts:pts};
+  }).sort(function(a,b){return b.pts-a.pts;});
+}
+function addRanks(arr){
+  var rank=1;
+  for(var i=0;i<arr.length;i++){
+    arr[i].rank=i>0&&arr[i].pts===arr[i-1].pts?arr[i-1].rank:rank;
+    rank++;
+  }
+  return arr;
+}
+function medalFor(r){return r===1?'\ud83e\udd47':r===2?'\ud83e\udd48':r===3?'\ud83e\udd49':null;}
+function clsFor(r){return r===1?'gold':r===2?'silver':r===3?'bronze':'';}
+
+/* ── RENDER CLASSIFICHE ── */
+function renderClassifiche(){
+  hideAll();
+  var w=document.getElementById('CLSW');w.style.display='block';
+
+  var phases=[
+    {label:'Fase a Gironi (72 partite)',preds:PREDS,      results:RESULTS,      matches:MATCHES,color:'var(--green2)'},
+    {label:'Sedicesimi di Finale',      preds:R16PREDS,   results:R16RESULTS,   matches:R16,    color:'#c89bf0'},
+    {label:'Ottavi di Finale',          preds:OTTPREDS,   results:OTTRESULTS,   matches:OTTAVI, color:'#c89bf0'},
+    {label:'Quarti di Finale',          preds:QUARTIPREDS,results:QUARTIRESULTS,matches:QUARTI, color:'#c89bf0'},
+    {label:'Semifinali',                preds:SEMIPREDS,  results:SEMIRESULTS,  matches:SEMI,   color:'#c89bf0'},
+  ];
+
+  var html='';
+
+  // Classifica Generale
+  var totalScores=FRIENDS.map(function(f){
+    var pts=0;
+    phases.forEach(function(ph){
+      var fp=ph.preds[f]||{};
+      ph.matches.forEach(function(m){if(ph.results[m.id]&&fp[m.id]===ph.results[m.id])pts++;});
+    });
+    // finale
+    var ff=FINALEPREDS[f]||{};
+    FINALE.forEach(function(m){if(FINALERESULTS[m.id]&&ff[m.id]===FINALERESULTS[m.id])pts++;});
+    // 3/4 posto
+    var ft=TER3PREDS[f]||{};
+    TER3.forEach(function(m){if(TER3RESULTS[m.id]&&ft[m.id]===TER3RESULTS[m.id])pts++;});
+    return{name:f,pts:pts};
+  }).sort(function(a,b){return b.pts-a.pts;});
+  addRanks(totalScores);
+
+  html+='<div class="phase-title" style="color:var(--gold2)">&#127942; CLASSIFICA GENERALE</div>';
+  html+=renderPodio(totalScores,'var(--gold2)');
+  html+=renderLbList(totalScores,'lb-total','var(--gold2)');
+
+  // Singole fasi
+  phases.forEach(function(ph){
+    var played=ph.matches.filter(function(m){return ph.results[m.id];}).length;
+    if(ph.matches.length===0){
+      html+='<div class="phase-title" style="color:'+ph.color+'">'+ph.label+'</div>';
+      html+='<div class="tbd-msg" style="padding:20px">Partite non ancora definite</div>';
+      return;
+    }
+    var scores=addRanks(calcScore(FRIENDS,ph.preds,ph.results,ph.matches));
+    html+='<div class="phase-title" style="color:'+ph.color+'">'+ph.label
+      +'<br><span style="font-size:11px;opacity:.7">'+played+' / '+ph.matches.length+' partite giocate</span></div>';
+    html+=renderPodio(scores,ph.color);
+    html+=renderLbList(scores,'','var(--green2)');
+  });
+
+  // 3/4 posto
+  html+='<div class="phase-title" style="color:#cd7f32">Finale 3°/4° Posto</div>';
+  if(TER3.length===0){
+    html+='<div class="tbd-msg" style="padding:20px">Partita non ancora definita</div>';
+  } else {
+    var ts=addRanks(calcScore(FRIENDS,TER3PREDS,TER3RESULTS,TER3));
+    html+=renderPodio(ts,'#cd7f32');
+    html+=renderLbList(ts,'','#cd7f32');
+  }
+
+  // Finale
+  html+='<div class="phase-title" style="color:#c89bf0">Finale</div>';
+  if(FINALE.length===0){
+    html+='<div class="tbd-msg" style="padding:20px">Partita non ancora definita</div>';
+  } else {
+    var fs=addRanks(calcScore(FRIENDS,FINALEPREDS,FINALERESULTS,FINALE));
+    html+=renderPodio(fs,'#c89bf0');
+    html+=renderLbList(fs,'','#c89bf0');
+  }
+
+  w.innerHTML=html;
+}
+
+function renderPodio(scores,color){
+  var groups={};
+  scores.forEach(function(s){if(!groups[s.rank])groups[s.rank]=[];groups[s.rank].push(s);});
+  var html='<div class="podium-wrap">';
+  [2,1,3].forEach(function(rank){
+    var g=groups[rank];if(!g||!g.length)return;
+    var cls=rank===1?'p1':rank===2?'p2':'p3';
+    var med=rank===1?'\ud83e\udd47':rank===2?'\ud83e\udd48':'\ud83e\udd49';
+    html+='<div class="podium-col"><div class="podium-block '+cls+'">'
+      +'<div class="podium-medal">'+med+'</div>'
+      +'<div class="podium-name">'+g.map(function(s){return s.name;}).join('<br>')+'</div>'
+      +'<div class="podium-pts">'+g[0].pts+' pt</div>'
+      +'</div></div>';
+  });
+  return html+'</div>';
+}
+
+function renderLbList(scores,extraCls,scoreColor){
+  var html='<div style="padding:0 14px 16px">';
+  scores.forEach(function(s){
+    var med=medalFor(s.rank),cls=clsFor(s.rank);
+    html+='<div class="lb-row '+cls+' '+extraCls+'" style="margin-bottom:6px">'
+      +'<div class="lb-pos">'+(med||s.rank)+'</div>'
+      +'<div class="lb-name">'+s.name+'</div>'
+      +'<div class="lb-score" style="color:'+scoreColor+'">'+s.pts+'<span class="lb-pts">pt</span></div>'
+      +'</div>';
+  });
+  return html+'</div>';
+}
+
+/* ── TABS ── */
+function setTab(t,el){
+  AT=t;
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+  var titles={G1:'Giornata 1',G2:'Giornata 2',G3:'Giornata 3',
+    R16:'Sedicesimi di Finale',OTT:'Ottavi di Finale',
+    QUA:'Quarti di Finale',SEM:'Semifinali',FIN:'Finale',TER:'Finale 3°/4° Posto',
+    CLS:'Classifiche e Podi'};
+  document.getElementById('panelTitle').textContent=titles[t]||t;
+  uvb();renderPhase();
+}
+
+/* ── ADMIN ── */
+function openAdmin(){document.getElementById('adminModal').classList.add('open');document.getElementById('pinIn').value='';document.getElementById('pinErr').style.display='none';setTimeout(function(){document.getElementById('pinIn').focus();},100);}
+function closeAdmin(){document.getElementById('adminModal').classList.remove('open');}
+function checkPin(){
+  if(document.getElementById('pinIn').value===ADMIN_PIN){
+    isAdmin=true;closeAdmin();
+    document.getElementById('adminBar').style.display='block';
+    document.getElementById('adminToggleBtn').style.display='none';
+    renderPhase();toast('Admin attivato');
+  }else{document.getElementById('pinErr').style.display='block';document.getElementById('pinIn').value='';}
+}
+function logoutAdmin(){
+  isAdmin=false;
+  document.getElementById('adminBar').style.display='none';
+  document.getElementById('adminToggleBtn').style.display='block';
+  renderPhase();toast('Admin disattivato','info');
+}
+document.getElementById('adminModal').addEventListener('click',function(e){if(e.target===e.currentTarget)closeAdmin();});
+
+var tTimer;
+function toast(msg,type){
+  type=type||'ok';var el=document.getElementById('toast');
+  el.textContent=msg;el.style.display='block';
+  el.style.background=type==='ok'?'#16a34a':type==='err'?'#dc2626':'#d97706';
+  clearTimeout(tTimer);tTimer=setTimeout(function(){el.style.display='none';},3000);
+}
+
+window.addEventListener('load',function(){uvb();renderPhase();});
+</script>
+</body>
+</html>
